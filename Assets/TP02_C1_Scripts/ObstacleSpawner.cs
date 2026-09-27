@@ -177,5 +177,15 @@ public class ObstacleSpawner : MonoBehaviour
             }
         }
         activeObstacles.Clear();
+
+        // Limpiar cualquier obstáculo remanente en la escena
+        Obstacle[] allObstacles = FindObjectsByType<Obstacle>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var obs in allObstacles)
+        {
+            if (obs != null)
+            {
+                Destroy(obs.gameObject);
+            }
+        }
     }
 }

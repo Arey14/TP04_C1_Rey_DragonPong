@@ -278,6 +278,8 @@ public class GameManager : MonoBehaviour
     public void RestartMatch()
     {
         ResetMatch();
+        ResetPaddles();
+        ClearObstacles();
         Time.timeScale = 1f;
 
         if (ball != null)
@@ -299,8 +301,49 @@ public class GameManager : MonoBehaviour
             gameOverPanel.SetActive(false);
         }
 
+        ResetPaddles();
+        ClearObstacles();
+
         UpdateScoreUI();
         UpdateTimerUI();
+    }
+
+    /// <summary>
+    /// Destruye todos los obstáculos activos en la cancha.
+    /// </summary>
+    public void ClearObstacles()
+    {
+        ObstacleSpawner spawner = FindFirstObjectByType<ObstacleSpawner>(FindObjectsInactive.Include);
+        if (spawner != null)
+        {
+            spawner.ClearAllObstacles();
+        }
+        else
+        {
+            Obstacle[] allObstacles = FindObjectsByType<Obstacle>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var obs in allObstacles)
+            {
+                if (obs != null)
+                {
+                    Destroy(obs.gameObject);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Restablece las paletas de ambos jugadores a sus posiciones de inicio.
+    /// </summary>
+    public void ResetPaddles()
+    {
+        PaddleController[] paddles = FindObjectsByType<PaddleController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var paddle in paddles)
+        {
+            if (paddle != null)
+            {
+                paddle.ResetPosition();
+            }
+        }
     }
 
     /// <summary>

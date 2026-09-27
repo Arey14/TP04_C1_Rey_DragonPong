@@ -30,11 +30,13 @@ public class PaddleController : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private Vector2 moveInput = Vector2.zero;
+    private Vector2 startPosition;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        startPosition = transform.position;
 
         // Configuración de físicas 2D: Sin gravedad y rotación fija
         rb.gravityScale = 0f;
@@ -190,6 +192,19 @@ public class PaddleController : MonoBehaviour
     public bool IsPlayer1()
     {
         return isPlayer1;
+    }
+
+    /// <summary>
+    /// Restablece la paleta a su posición inicial original y anula la velocidad física.
+    /// </summary>
+    public void ResetPosition()
+    {
+        transform.position = startPosition;
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
+        moveInput = Vector2.zero;
     }
 
     #endregion
