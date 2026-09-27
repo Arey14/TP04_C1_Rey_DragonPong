@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 28
-  productGUID: d86ae5a04fc216035b88cb20b7df9410
+  productGUID: 206733a5b59ff5e3f8b3d00b51b8fec3
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: TP04_C1_Rey_DragonPong
+  productName: TP03_C1_Rey_Pong
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -618,7 +618,7 @@ PlayerSettings:
   ps4GarlicHeapSize: 2048
   ps4ProGarlicHeapSize: 2560
   playerPrefsMaxSize: 32768
-  ps4Passcode: frTjb9p61OSd99Qcdy9G6ELJgiwdbilG
+  ps4Passcode: ZTvFS73bcw3UJ7XVmZpq13d0HyAL95Nj
   ps4pnSessions: 1
   ps4pnPresence: 1
   ps4pnFriends: 1
@@ -707,14 +707,14 @@ PlayerSettings:
   editorAssembliesCompatibilityLevel: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: TP04_C1_Rey_DragonPong
+  metroPackageName: TP02_C1_Rey_Pong
   metroPackageVersion: 
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: TP04_C1_Rey_DragonPong
+  metroApplicationDescription: TP02_C1_Rey_Pong
   wsaImages: {}
   metroTileShortName: 
   metroTileShowName: 0
@@ -783,13 +783,13 @@ PlayerSettings:
   qnxGraphicConfPath: 
   apiCompatibilityLevel: 6
   captureStartupLogs: {}
-  activeInputHandler: 1
+  activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 
+  cloudProjectId: 4a8c49c4-9233-498e-925a-fd62cc754f54
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
-  organizationId: 
+  projectName: TP03_C1_Rey_Pong
+  organizationId: augustorey14
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
