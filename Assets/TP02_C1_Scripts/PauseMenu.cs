@@ -50,8 +50,19 @@ public class PauseMenu : MonoBehaviour
         }
         if (exitButton != null)
         {
-            exitButton.onClick.RemoveListener(ExitGame);
-            exitButton.onClick.AddListener(ExitGame);
+            #if UNITY_WEBGL
+            exitButton.gameObject.SetActive(false);
+            #else
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
+            {
+                exitButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                exitButton.onClick.RemoveListener(ExitGame);
+                exitButton.onClick.AddListener(ExitGame);
+            }
+            #endif
         }
 
         if (settingsBackButton != null)
