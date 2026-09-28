@@ -6,6 +6,31 @@ El desarrollo sigue la filosofía **Ponytail** (código pragmático, modular, li
 
 ---
 
+## 🔗 Enlaces del Proyecto
+
+- **Jugar en Itch.io:** [https://arey14.itch.io/dragonpong](https://arey14.itch.io/dragon-pong) 
+- **Repositorio en GitHub:** [https://github.com/Arey14/TP04_C1_Rey_DragonPong](https://github.com/Arey14/TP04_C1_Rey_DragonPong)
+
+---
+
+## 📖 Detalle del Juego
+
+### 🎯 ¿Qué hacer? (Objetivo)
+**Dragon Pong** es un juego de arcade competitivo para dos jugadores. El objetivo principal es **anotar 3 goles** antes que tu rival para ganar la partida (modalidad al mejor de 5). 
+
+Cada punto tiene una **cuenta regresiva de 20 segundos**: si el tiempo expira sin que nadie anote, el jugador que tenga la pelota de su lado de la cancha recibirá un **gol en contra automático**. Además, aparecerán **obstáculos temporales en el centro** que duran entre 3 y 7 segundos e interactúan con la pelota mediante rebotes elásticos.
+
+### 🕹️ ¿Cómo jugar?
+1. Desde el **Menú Principal**, presiona **Play** para iniciar el partido.
+2. Cada jugador controla su respectivo dragón/paleta utilizando las teclas asignadas.
+3. Puedes moverte libremente en dos dimensiones dentro de tu respectiva **mitad de cancha**.
+4. ¡Cuidado con los bordes! Si tocas o empujas los límites de la pantalla, tu paleta se volverá de color **Negro**.
+5. Al golpear la pelota, tu paleta cambiará a un **color aleatorio**.
+6. Usa los obstáculos del centro a tu favor para cambiar la trayectoria de la pelota y sorprender a tu rival.
+7. Puedes pausar en cualquier momento con <kbd>Escape</kbd> para ajustar la velocidad, tamaño o color de tu dragón.
+
+---
+
 ## 🎮 Controles de Juego
 
 | Jugador / Acción | Movimiento Vertical | Movimiento Horizontal | Delimitación de Cancha |
@@ -22,11 +47,12 @@ El desarrollo sigue la filosofía **Ponytail** (código pragmático, modular, li
 
 - **Mecánicas del TP03 integradas y conservadas:**
   - Sistema completo de menús: Menú Principal, Menú de Pausa, Panel de Opciones y Créditos.
+  - Ocultamiento inteligente del botón *Exit* en WebGL.
   - Personalización en vivo de velocidades, altura de paleta y paleta de colores.
   - Gestión del tiempo con `Time.timeScale` y cálculo físico en `Time.fixedDeltaTime`.
 - **Físicas 2D Puras (`Rigidbody2D` $\rightarrow$ `AddForce`):**
   - Todo movimiento de paletas, pelota y objetos en escena está controlado mediante fuerzas físicas en `FixedUpdate`.
-  - Frenado suave y aceleración angular en los rebotes.
+  - Frenado suave (`Mathf.Lerp`) y aceleración angular en los rebotes.
 - **Movimiento 2D y Delimitación de Cancha:**
   - Ambas paletas pueden moverse tanto en el eje vertical como horizontal (<kbd>WASD</kbd> para P1 y <kbd>Flechas</kbd> para P2).
   - Cada jugador está estrictamente restringido a su respectiva mitad de cancha (no pueden invadir el campo rival ni salirse de los límites).
@@ -36,8 +62,9 @@ El desarrollo sigue la filosofía **Ponytail** (código pragmático, modular, li
 - **Partida al Mejor de 5 (Gana quien llega a 3 goles):**
   - Marcador en vivo gestionado por `GameManager`.
   - Al alcanzar los 3 goles (configurable en `GameSettings`), se declara al ganador, se despliega el panel de **Game Over** y se ofrecen botones para *Jugar de nuevo* o *Volver al Menú Principal*.
+  - Reseteo automático de la posición de ambos jugadores al reiniciar.
 - **Límite de Tiempo de 20 Segundos por Jugada:**
-  - Temporizador regresivo en pantalla con alerta visual en los últimos segundos.
+  - Temporizador regresivo en pantalla con alerta visual en los últimos segundos (color rojo $\le 5s$).
   - **Regla de Auto-Gol:** Si se agotan los 20 segundos sin convertir, el sistema comprueba en qué mitad de cancha se encuentra la pelota ($X < 0$ o $X \ge 0$) y se le cobra gol en contra automáticamente al jugador de ese lado.
 - **Reglas Dinámicas de Color de Paletas:**
   - **Choque con límites/paredes:** La paleta cambia automáticamente a color **Negro** (`Color.black`).
@@ -55,6 +82,7 @@ El desarrollo sigue la filosofía **Ponytail** (código pragmático, modular, li
 
 - **Sistema de Obstáculos Dinámicos Temporales:**
   - Spawner periódico (`ObstacleSpawner`) que genera obstáculos en posiciones aleatorias de la zona central de la cancha.
+  - Limpieza y destrucción completa de obstáculos al reiniciar la partida o volver al menú.
 - **Tiempo de Vida Aleatorio (3 a 7 segundos):**
   - Cada obstáculo se destruye automáticamente tras un intervalo aleatorio entre **3 y 7 segundos** (`Random.Range(3f, 7f)`).
   - Incluye una transición suave de desvanecimiento (*fade-out*) en sus últimos 0.5 segundos de vida.
@@ -72,13 +100,13 @@ El desarrollo sigue la filosofía **Ponytail** (código pragmático, modular, li
 | :--- | :--- |
 | [`GameSettings.cs`](Assets/TP02_C1_Scripts/GameSettings.cs) | **ScriptableObject**: Centraliza goles para ganar (3), tiempo límite (20s), velocidades y parámetros de obstáculos. |
 | [`GameManager.cs`](Assets/TP02_C1_Scripts/GameManager.cs) | **Singleton / Game Loop**: Controla el marcador, temporizador de 20s, cobro de auto-gol por lado de cancha, pantalla de Game Over y reinicio. |
-| [`PaddleController.cs`](Assets/TP02_C1_Scripts/PaddleController.cs) | Movimiento físico 2D con `AddForce` (WASD / Flechas), límites por mitad de cancha y cambios de color (Negro con límites, aleatorio con pelota). |
+| [`PaddleController.cs`](Assets/TP02_C1_Scripts/PaddleController.cs) | Movimiento físico 2D con `AddForce` (WASD / Flechas), límites por mitad de cancha, reinicio de posición y cambios de color. |
 | [`BallController.cs`](Assets/TP02_C1_Scripts/BallController.cs) | Lanzamiento físico con `AddForce`, aceleración por impacto, rebote angular dinámico y sincronización con `GameManager`. |
 | [`GoalTrigger.cs`](Assets/TP02_C1_Scripts/GoalTrigger.cs) | Detecta cuando la pelota cruza el arco y suma el punto al rival a través de `GameManager`. |
 | [`Obstacle.cs`](Assets/TP02_C1_Scripts/Obstacle.cs) | Comportamiento del obstáculo: tiempo de vida de 3 a 7 segundos, colisionador 2D y efecto visual de fade-out. |
 | [`ObstacleSpawner.cs`](Assets/TP02_C1_Scripts/ObstacleSpawner.cs) | Generador de obstáculos en el centro de la cancha, con rotación angular aleatoria, soporte para sprites/prefabs y limpieza por ronda. |
-| [`MainMenu.cs`](Assets/TP02_C1_Scripts/MainMenu.cs) | Navegación del Menú Principal, inicio de partida y reinicio de tanteador. |
-| [`PauseMenu.cs`](Assets/TP02_C1_Scripts/PauseMenu.cs) | Menú de Pausa (<kbd>Escape</kbd>), detención del tiempo y retorno al Menú Principal o ajustes. |
+| [`MainMenu.cs`](Assets/TP02_C1_Scripts/MainMenu.cs) | Navegación del Menú Principal, inicio de partida, ocultamiento en WebGL y reinicio de tanteador. |
+| [`PauseMenu.cs`](Assets/TP02_C1_Scripts/PauseMenu.cs) | Menú de Pausa (<kbd>Escape</kbd>), detención del tiempo, retorno al Menú Principal y ocultamiento en WebGL. |
 | [`SettingsMenu.cs`](Assets/TP02_C1_Scripts/SettingsMenu.cs) | Menú interactivo para cambiar velocidad, altura de paleta y colores de los jugadores en tiempo real. |
 
 ---
@@ -94,3 +122,14 @@ El desarrollo sigue la filosofía **Ponytail** (código pragmático, modular, li
    - Objeto `GameManager` con el script `GameManager.cs`.
    - Objeto `ObstacleSpawner` con el script `ObstacleSpawner.cs`.
 5. Presionar **Play** ▶️ para jugar.
+
+---
+
+## 👤 Autor y Créditos
+
+- **Autor:** Augusto Rey
+- **Materia:** Programación / Desarrollo de Videojuegos
+- **Institución:** Escuela Da Vinci (o institución correspondiente)
+- **Entrega:** Trabajo Práctico 04 (TP04) - Comisión 1
+- **Motor de Videojuegos:** Unity Engine
+- **Arte y Sprites:** Assets propios / Texturas 2D en `Assets/Sprites/`
