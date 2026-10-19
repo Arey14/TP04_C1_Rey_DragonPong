@@ -10,6 +10,8 @@ using UnityEngine;
 public class ObstacleSpawner : MonoBehaviour
 {
     [Header("Configuración")]
+    // Error: En SampleScene.unity el ObstacleSpawner tiene gameSettings: {fileID: 0}. Se usan spawnInterval: 3 y maxSimultaneousObstacles: 3 del inspector, no los 4 y 2 de GameSettings.asset,
+    // y tampoco se le pasan a Obstacle los tiempos de vida del SO. Asigná el asset en el inspector.
     [SerializeField] private GameSettings gameSettings;
     [Tooltip("Opcional: Asigna un Prefab completo si lo tienes armado")]
     [SerializeField] private GameObject obstaclePrefab;
@@ -35,6 +37,7 @@ public class ObstacleSpawner : MonoBehaviour
     [SerializeField] private int maxSimultaneousObstacles = 2;
 
     private readonly List<GameObject> activeObstacles = new List<GameObject>();
+    // Suggestion: spawnCoroutine se asigna en Start y no se lee nunca. Usalo para frenar el loop (StopCoroutine) o borralo.
     private Coroutine spawnCoroutine;
     private static PhysicsMaterial2D bouncyMat;
 
@@ -179,6 +182,8 @@ public class ObstacleSpawner : MonoBehaviour
         activeObstacles.Clear();
 
         // Limpiar cualquier obstáculo remanente en la escena
+        // Warning: Después de destruir lo que está en activeObstacles se vuelve a recorrer la escena entera con FindObjectsByType. Todo obstáculo pasa por SpawnObstacle, que lo agrega a la lista,
+        // así que esta segunda búsqueda sobra. Confiá en la lista.
         Obstacle[] allObstacles = FindObjectsByType<Obstacle>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var obs in allObstacles)
         {

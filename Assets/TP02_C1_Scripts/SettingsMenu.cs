@@ -56,6 +56,8 @@ public class SettingsMenu : MonoBehaviour
 
     void Start()
     {
+        // Suggestion: OnEnable corre antes que Start, así que al arrancar AutoFindReferences, InitializeControls y SetupColorButtons se ejecutan dos veces (y AutoFindReferences tres, contando Awake).
+        // Con OnEnable alcanza.
         AutoFindReferences();
         InitializeControls();
         SetupColorButtons();
@@ -71,6 +73,8 @@ public class SettingsMenu : MonoBehaviour
     /// <summary>
     /// Busca y vincula automáticamente los jugadores y componentes de UI si no fueron asignados en el Inspector.
     /// </summary>
+    // Warning: Las catorce referencias del panel están vacías en SampleScene.unity (Settings_Panel) y todo depende de buscar substrings en el nombre de los GameObject.
+    // Es frágil: "der" también aparece en "slider", y renombrar un objeto rompe el panel sin error. Asigná las referencias en el inspector y borrá este método.
     public void AutoFindReferences()
     {
         // 1. Auto-vincular Jugadores por posición X (Izquierda = P1, Derecha = P2)
@@ -161,6 +165,7 @@ public class SettingsMenu : MonoBehaviour
         // 1. Velocidad P1
         if (player1 != null && speedSliderP1 != null)
         {
+            // Suggestion: Los rangos 5f/30f y 0.5f/3f están escritos dos veces cada uno y no salen del SO. Declaralos como const o como campos serializados.
             speedSliderP1.minValue = 5f;
             speedSliderP1.maxValue = 30f;
             speedSliderP1.value = player1.GetSpeed();
@@ -306,6 +311,7 @@ public class SettingsMenu : MonoBehaviour
     /// <summary>
     /// Cambia el color de Player 1 pasando el índice de la paleta predefinida.
     /// </summary>
+    // Suggestion: SetPlayer1ColorIndex y SetPlayer2ColorIndex no se llaman desde ningún script ni botón. Código muerto.
     public void SetPlayer1ColorIndex(int index)
     {
         if (index >= 0 && index < colorPalette.Length)

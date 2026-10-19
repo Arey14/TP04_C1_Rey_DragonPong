@@ -9,6 +9,8 @@ using UnityEngine;
 public class BallController : MonoBehaviour
 {
     [Header("Configuración General")]
+    // Error: En SampleScene.unity el objeto Pelotita tiene gameSettings: {fileID: 0}. Sin el asset asignado, el bloque de Start no se ejecuta y la pelota usa los valores del inspector
+    // (startDelay 1 en la escena contra ballStartDelay 1.5 en GameSettings.asset). El SO queda de adorno para la pelota. Arrastrá GameSettings.asset a este campo.
     [SerializeField] private GameSettings gameSettings;
 
     [Header("Configuración de Velocidad")]
@@ -133,6 +135,7 @@ public class BallController : MonoBehaviour
         return currentSpeed;
     }
 
+    // Suggestion: IsInPlay() y GetCurrentSpeed() no se llaman desde ningún script, y isInPlay solo se escribe. Borralos si no los vas a usar.
     public bool IsInPlay()
     {
         return isInPlay;

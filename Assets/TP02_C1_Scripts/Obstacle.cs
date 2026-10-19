@@ -37,6 +37,7 @@ public class Obstacle : MonoBehaviour
     private IEnumerator LifetimeRoutine(float lifetime)
     {
         // Esperar el tiempo de vida menos los últimos 0.5s para realizar un fade-out suave
+        // Suggestion: 0.5f aparece tres veces como duración del fade. Declaralo una vez: private const float FadeDuration = 0.5f;
         float activeDuration = Mathf.Max(0.1f, lifetime - 0.5f);
         yield return new WaitForSeconds(activeDuration);
 

@@ -76,12 +76,16 @@ public class PauseMenu : MonoBehaviour
             creditsBackButton.onClick.AddListener(OnBackFromSubmenu);
         }
 
+        // Bug: Resume() pone Time.timeScale = 1f en Start, y MainMenu.Start llama a ShowMainMenu() que lo pone en 0f. El orden de Start entre los dos objetos no está definido,
+        // así que según cuál corra último el menú principal puede quedar con el tiempo corriendo detrás. En Start ocultá la UI de pausa sin tocar timeScale.
         Resume();
     }
 
     void Update()
     {
         // Si el menú principal está en pantalla o el juego aún no ha iniciado, no permitimos pausar
+        // Bug: No se chequea GameManager.Instance.IsGameOver(). Con el panel de Game Over abierto (timeScale 0) se puede apretar Escape dos veces y Resume() devuelve timeScale a 1
+        // detrás del panel, con la pelota y las paletas moviéndose. Agregá la condición de fin de partida a este return.
         if (!MainMenu.IsGamePlaying || (mainMenuPanel != null && mainMenuPanel.activeInHierarchy))
         {
             return;
@@ -182,6 +186,7 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
+    // Suggestion: ReturnToMainMenu no lo llama ningún script ni ningún botón de SampleScene.unity. Conectalo a un botón de la pausa o borralo.
     public void ReturnToMainMenu()
     {
         SetPauseUIVisible(false);

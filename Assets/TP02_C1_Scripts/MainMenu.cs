@@ -51,6 +51,8 @@ public class MainMenu : MonoBehaviour
         }
         if (exitButton != null)
         {
+            // Suggestion: Fuera de #if UNITY_WEBGL, Application.platform nunca vale WebGLPlayer, así que el if de abajo es redundante. Además este bloque está copiado igual en PauseMenu.Start.
+            // Dejá solo la directiva de compilación y sacá la lógica de Exit a un método compartido.
             #if UNITY_WEBGL
             exitButton.gameObject.SetActive(false);
             #else

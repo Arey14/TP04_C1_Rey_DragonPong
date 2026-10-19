@@ -9,6 +9,8 @@ public class GameSettings : ScriptableObject
 {
     [Header("Reglas de Partida")]
     [Tooltip("Puntos necesarios para ganar (por defecto 3 para 'al mejor de 5')")]
+    // Warning: Los catorce campos del ScriptableObject son public, así que cualquier clase puede pisar los valores de diseño del asset en runtime.
+    // Pasalos a [SerializeField] private y exponé una property de solo lectura por campo (public int PointsToWin => pointsToWin;).
     public int pointsToWin = 3;
 
     [Tooltip("Tiempo límite en segundos para anotar antes de cobrar gol en contra")]
@@ -35,6 +37,8 @@ public class GameSettings : ScriptableObject
     /// <summary>
     /// Genera una instancia por defecto en memoria si no se asignó un asset en el Inspector.
     /// </summary>
+    // Suggestion: CreateDefaultSettings no se llama desde ningún script. Es código muerto que además repite los catorce valores por defecto de arriba.
+    // Borralo, o usalo de verdad como fallback en lugar de los valores escritos a mano en GameManager.LoadSettings.
     public static GameSettings CreateDefaultSettings()
     {
         GameSettings settings = CreateInstance<GameSettings>();

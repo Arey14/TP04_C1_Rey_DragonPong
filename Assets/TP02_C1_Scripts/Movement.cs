@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Suggestion: Este script es del TP01 y no está en ningún objeto de SampleScene.unity. Es código muerto, y sus campos (KeyCodeUp, KeyCodeDown) usan PascalCase a diferencia del resto del proyecto. Borralo.
 public class Movement : MonoBehaviour
 {
     private SpriteRenderer sr;

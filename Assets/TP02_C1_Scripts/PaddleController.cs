@@ -9,6 +9,8 @@ using UnityEngine;
 public class PaddleController : MonoBehaviour
 {
     [Header("Configuración General")]
+    // Error: Player1 y Player2 tienen gameSettings: {fileID: 0} en SampleScene.unity, así que paddleSpeed y paddleHeight del SO nunca se leen y manda el speed: 15 del inspector.
+    // Asigná GameSettings.asset en las dos paletas para que el ScriptableObject sea realmente la fuente de inicialización.
     [SerializeField] private GameSettings gameSettings;
     [SerializeField] private bool isPlayer1 = true;
 
@@ -69,6 +71,8 @@ public class PaddleController : MonoBehaviour
         if (isPlayer1)
         {
             // Jugador 1 (Lado izquierdo): Entre el arco izquierdo y la línea media
+            // Suggestion: Acá se pisan minX, maxX e isPlayer1 que están serializados en el inspector (Player2 tiene isPlayer1: 1, minX: -8 y maxX: -0.3 en la escena, y se ignoran).
+            // O los límites salen del inspector (o de GameSettings), o no los serialices. Tener las dos fuentes confunde y los números -8, -0.3, 0.3 y 8 quedan mágicos.
             minX = -8.0f;
             maxX = -0.3f;
             if (upKey == KeyCode.None) upKey = KeyCode.W;
@@ -106,6 +110,8 @@ public class PaddleController : MonoBehaviour
         // Movimiento físico mediante AddForce utilizando Time.fixedDeltaTime
         if (moveInput != Vector2.zero)
         {
+            // Suggestion: ForceMode2D.Force ya integra la fuerza con el paso de física; multiplicar por Time.fixedDeltaTime * 50f da 1 con el timestep por defecto y no aporta nada.
+            // Sacá el 50f mágico y ajustá speed como fuerza directa.
             Vector2 force = moveInput * (speed * Time.fixedDeltaTime * 50f);
             rb.AddForce(force, ForceMode2D.Force);
         }
@@ -128,6 +134,8 @@ public class PaddleController : MonoBehaviour
 
             pos.x = Mathf.Clamp(pos.x, minX, maxX);
             pos.y = Mathf.Clamp(pos.y, -yBoundary, yBoundary);
+            // Bug: Se reposiciona el transform de un Rigidbody2D dinámico pero no se toca su velocidad. Mientras el jugador empuja contra un límite, AddForce sigue sumando velocidad (no hay damping ni tope)
+            // y al invertir la tecla la paleta queda pegada al borde hasta que la fuerza contraria compensa lo acumulado. Usá rb.position, anulá la componente de rb.linearVelocity que apunta hacia afuera y poné una velocidad máxima.
             transform.position = pos;
 
             // Si el paddle presiona contra el límite de la pantalla, cambia a color Negro

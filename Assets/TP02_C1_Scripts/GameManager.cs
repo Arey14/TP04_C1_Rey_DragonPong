@@ -67,6 +67,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            // Suggestion: 3 y 20f repiten los valores del SO y los inicializadores de los campos de arriba. Si cambia la regla, hay que tocarla en tres lugares.
+            // Como el asset está asignado en la escena, alcanza con avisar si gameSettings es null (por ejemplo con un Debug.LogError) y no duplicar los números.
             pointsToWin = 3; // Al mejor de 5
             roundTimeLimit = 20f; // 20 segundos límite
         }
@@ -75,6 +77,8 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Auto-vincula componentes de UI (incluyendo inactivos) si no se configuraron en el Inspector.
     /// </summary>
+    // Warning: AutoFindUI busca textos, paneles y botones por substrings del nombre del GameObject ("score", "gol", "menu") y recorre todos los GameObject de la escena con FindObjectsByType.
+    // Se llama dos veces (Awake y Start) y en SampleScene.unity las siete referencias de UI ya están asignadas en el inspector. Renombrar un objeto rompe el vínculo sin ningún error. Borralo y confiá en las referencias serializadas.
     public void AutoFindUI()
     {
         // 1. Textos
@@ -201,6 +205,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            // Suggestion: Esta rama solo se ejecuta cuando ball es null, así que el if (ball != null) de adentro nunca es verdadero. Es código muerto, borrá el else entero.
             if (ball != null) ball.ResetBall();
         }
     }
@@ -313,6 +318,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void ClearObstacles()
     {
+        // Warning: FindFirstObjectByType en runtime en cada reinicio. Serializá una referencia [SerializeField] private ObstacleSpawner obstacleSpawner; y asignala en el inspector.
         ObstacleSpawner spawner = FindFirstObjectByType<ObstacleSpawner>(FindObjectsInactive.Include);
         if (spawner != null)
         {
@@ -336,6 +342,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void ResetPaddles()
     {
+        // Warning: FindObjectsByType<PaddleController> en runtime cada vez que se resetea la partida. Son dos paletas fijas de la escena: serializalas como referencias.
         PaddleController[] paddles = FindObjectsByType<PaddleController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var paddle in paddles)
         {
@@ -361,6 +368,8 @@ public class GameManager : MonoBehaviour
         }
 
         // Limpiar obstáculos activos
+        // Warning: Otra búsqueda en runtime, y además duplica ClearObstacles: unas líneas más abajo ResetMatch vuelve a llamar a ClearObstacles y ResetPaddles.
+        // Borrá este bloque y dejá que lo haga ResetMatch.
         ObstacleSpawner spawner = FindFirstObjectByType<ObstacleSpawner>(FindObjectsInactive.Include);
         if (spawner != null)
         {
@@ -408,3 +417,4 @@ public class GameManager : MonoBehaviour
     public int GetScoreP2() => scoreP2;
     public bool IsGameOver() => isGameOver;
 }
+// Suggestion: este patrón (FindObjectsByType / FindFirstObjectByType en runtime fuera de AutoFindUI) se repite 4 veces en este archivo (ClearObstacles, ResetPaddles y dos veces en ReturnToMenu).
